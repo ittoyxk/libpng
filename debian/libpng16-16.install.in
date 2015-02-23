@@ -1,0 +1,1 @@
+usr/lib/${DEB_HOST_MULTIARCH}/libpng16.so.16* /lib/${DEB_HOST_MULTIARCH}

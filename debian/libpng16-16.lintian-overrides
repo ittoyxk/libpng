@@ -1,0 +1,3 @@
+# This is lintian's problem. We need update lintian database.
+# /usr/share/lintian/data/binaries/embedded-libs
+libpng16-16: embedded-library lib/x86_64-linux-gnu/libpng16.so.16.10.0: libpng
