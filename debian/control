@@ -25,7 +25,7 @@ Package: libpng16-dev
 Section: libdevel
 Architecture: any
 Depends: ${misc:Depends}, libpng16-16 (= ${binary:Version}), zlib1g-dev
-Conflicts: libpng12-dev, libpng12-0-dev, libpng3-dev, libpng2-dev
+# Conflicts: libpng12-dev, libpng12-0-dev, libpng3-dev, libpng2-dev
 # Provides: libpng-dev
 Replaces: libpng12-dev, libpng12-0-dev, libpng3-dev, libpng2-dev
 Recommends: libpng16-tools
