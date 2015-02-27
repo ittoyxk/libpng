@@ -4,7 +4,7 @@ if [ $# -eq 1 ]; then
 	CHANGELOG=/tmp/changelog.tmp.$$
 
 	cat >> $CHANGELOG << EOF
-libpng1.6 (1.6.10-$1) experimental; urgency=low
+libpng1.6 (1.6.10-$1) stable; urgency=low
 
   * AutoBuild Revision Update
 
