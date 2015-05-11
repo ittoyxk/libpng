@@ -5,7 +5,7 @@ TMPDIR=libpng.$$
 mkdir -p ../${TMPDIR}
 
 cd ..
-cp -a liblibpng ${TMPDIR}/libpng-1.6.10
+cp -a libpng ${TMPDIR}/libpng-1.6.10
 cd ${TMPDIR}
 rm -rf libpng-1.6.10/.git*
 tar zcvf libpng-1.6.10.tar.gz libpng-1.6.10
