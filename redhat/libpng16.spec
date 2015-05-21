@@ -1,7 +1,7 @@
 Summary: A library of functions for manipulating PNG image format files
-Name: libpng
+Name: libpng16
 Epoch: 2
-Version: 1.6.10
+Version: 1.6.16
 Release: 3%{?dist}
 License: zlib
 Group: System Environment/Libraries
@@ -9,15 +9,13 @@ URL: http://www.libpng.org/pub/png/
 
 # Note: non-current tarballs get moved to the history/ subdirectory,
 # so look there if you fail to retrieve the version you want
-Source0: ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-%{version}.tar.gz
-
+Source0: ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/%{name}-%{version}.tar.gz
 Source1: pngusr.dfa
-
 Patch0: libpng-multilib.patch
+Patch1: libpng-fix-arm-neon.patch
 
-BuildRequires: zlib-devel, pkgconfig, libtool
-BuildRequires: autoconf >= 2.68
-BuildRequires: automake
+BuildRequires: zlib-devel
+BuildRequires: autoconf automake libtool
 
 %description
 The libpng package contains a library of functions for creating and
@@ -63,15 +61,14 @@ The libpng-tools package contains tools used by the authors of libpng.
 
 %prep
 %setup -q
-
 # Provide pngusr.dfa for build.
 cp -p %{SOURCE1} .
 
 %patch0 -p1
+%patch1 -p1 -b .arm
 
 %build
-autoreconf -vi
-
+autoreconf -vif
 %configure
 make %{?_smp_mflags} DFA_XTRA=pngusr.dfa
 
@@ -79,7 +76,10 @@ make %{?_smp_mflags} DFA_XTRA=pngusr.dfa
 make DESTDIR=$RPM_BUILD_ROOT install
 
 # We don't ship .la files.
-rm -rf $RPM_BUILD_ROOT%{_libdir}/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+
+# remove conflicting links
+rm $RPM_BUILD_ROOT%{_mandir}/man5/png.5
 
 %check
 #to run make check use "--with check"
@@ -92,11 +92,13 @@ make check
 %postun -p /sbin/ldconfig
 
 %files
-%doc libpng-manual.txt example.c README TODO CHANGES LICENSE
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 %{_libdir}/libpng16.so.*
-%{_mandir}/man5/*
+#%{_mandir}/man5/*
 
 %files devel
+%doc libpng-manual.txt example.c TODO CHANGES
 %{_bindir}/*
 %{_includedir}/*
 %{_libdir}/libpng*.so
@@ -110,8 +112,32 @@ make check
 %{_bindir}/pngfix
 
 %changelog
-* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:1.6.10-3
+* Thu May 21 2015 Chris Rienzo <chris.rienzo@citrix.com> 2:1.6.16-4
+- Rename to libpng16 for CentOS 7 install
+- Resolve file conflict with libpng 1.5
+
+* Sun Mar 22 2015 Peter Robinson <pbrobinson@fedoraproject.org> 2:1.6.16-3
+- Use %%license
+- Move docs to devel package as they're all related to dev
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 2:1.6.16-2
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Thu Jan 15 2015 Petr Hracek <phracek@redhat.com> - 2:1.6.16-1
+- New upstream release 1.6.16 (#1167665)
+
+* Mon Nov  3 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2:1.6.14-2
+- Add upstream patch to fix build on aarch64 (NEON issues)
+
+* Mon Oct 27 2014 Petr Hracek <phracek@redhat.com> - 2:1.6.14-1
+- Update to libpng 1.6.14 for minor bug fixes (#1147423)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:1.6.12-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jul 18 2014 Petr Hracek <phracek@redhat.com> - 2:1.6.12-1
+- Update to libpng 1.6.12 for minor bug fixes (#1111832)
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:1.6.10-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
